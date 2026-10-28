@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhishGuard | Cybersecurity & Digital Safety</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#ecfeff",
+                100: "#cffafe",
+                200: "#a5f3fc",
+                300: "#67e8f9",
+                400: "#22d3ee",
+                500: "#06b6d4",
+                600: "#0891b2",
+                700: "#0e7490",
+                800: "#155e75",
+                900: "#164e63"
+              }
+            },
+            boxShadow: {
+              glow: "0 0 0 1px rgba(16,185,129,0.3), 0 0 25px rgba(16,185,129,0.15)"
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      body {
+        background:
+          radial-gradient(circle at top, rgba(16, 185, 129, 0.12), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.12), transparent 24%),
+          #020617;
+      }
+
+      .glass {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      .flag-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.7rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .message-screen {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.9));
+        border: 1px solid rgba(148, 163, 184, 0.2);
+      }
+
+      .check-item {
+        transition: all 0.18s ease;
+      }
+
+      .check-item:hover {
+        transform: translateY(-1px);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen text-slate-100 antialiased">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <header class="mb-8">
+        <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <div class="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300">
+              <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+              PhishGuard
+            </div>
+            <h1 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Cybersecurity & Digital Safety
+            </h1>
+          </div>
+          <div class="rounded-2xl border border-slate-700 bg-slate-900/70 px-4 py-3 text-sm text-slate-300 shadow-glow">
+            Educational training only • Fictional examples • No real links or credentials
+          </div>
+        </div>
+      </header>
+
+      <main class="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
+        <section class="glass rounded-3xl border border-slate-700/80 p-5 shadow-2xl shadow-slate-950/40 sm:p-7">
+          <div class="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-[0.22em] text-amber-300">Phishing simulator</p>
+              <h2 class="mt-1 text-2xl font-bold text-white">Spot the scam</h2>
+            </div>
+            <div class="rounded-full border border-slate-600 bg-slate-950/70 px-3 py-1 text-sm font-medium text-slate-300">
+              Scenario <span id="scenarioCounter">1</span>/4
+            </div>
+          </div>
+
+          <div id="scenarioCard" class="message-screen rounded-2xl p-4 sm:p-5">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <span id="scenarioType" class="flag-pill bg-amber-500/15 text-amber-200 border border-amber-500/30">Email</span>
+                <span id="scenarioLabel" class="text-xs uppercase tracking-[0.18em] text-slate-400">Suspicious</span>
+              </div>
+              <div class="text-xs uppercase tracking-[0.18em] text-slate-400" id="scenarioSource">From</div>
+            </div>
+
+            <div class="mb-3 rounded-xl border border-slate-700 bg-slate-900/80 p-3">
+              <p class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Subject</p>
+              <h3 id="scenarioSubject" class="mt-2 text-xl font-semibold text-slate-50">Subject line</h3>
+            </div>
+
+            <div class="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+              <div class="mb-4 flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15 text-lg text-emerald-300">
+                  <span id="senderInitial">S</span>
+                </div>
+                <div>
+                  <p id="scenarioSender" class="font-medium text-slate-100">sender</p>
+                  <p class="text-xs text-slate-400">Security notice</p>
+                </div>
+              </div>
+
+              <div id="scenarioMessage" class="space-y-3 text-sm leading-7 text-slate-300">
+                Message preview...
+              </div>
+
+              <div class="mt-5 flex flex-wrap gap-2" id="redFlagBadges"></div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+            <button
+              id="phishingBtn"
+              class="flex-1 rounded-2xl border border-rose-500/50 bg-rose-500/10 px-5 py-3 text-base font-semibold text-rose-200 transition hover:bg-rose-500/20"
+            >
+              Identify as Phishing
+            </button>
+            <button
+              id="safeBtn"
+              class="flex-1 rounded-2xl border border-emerald-500/50 bg-emerald-500/10 px-5 py-3 text-base font-semibold text-emerald-200 transition hover:bg-emerald-500/20"
+            >
+              Safe
+            </button>
+          </div>
+
+          <div id="feedback" class="mt-6 hidden rounded-2xl border p-4">
+            <div class="mb-2 flex items-center gap-2">
+              <span id="feedbackIcon" class="inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold">✓</span>
+              <h3 id="feedbackTitle" class="text-lg font-semibold">Feedback</h3>
+            </div>
+            <p id="feedbackText" class="text-sm leading-6 text-slate-200"></p>
+            <ul id="feedbackList" class="mt-3 space-y-2 text-sm text-slate-200"></ul>
+          </div>
+        </section>
+
+        <aside class="glass rounded-3xl border border-slate-700/80 p-5 shadow-2xl shadow-slate-950/40 sm:p-7">
+          <div class="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-xs uppercase tracking-[0.22em] text-emerald-300">Checklist</p>
+              <h2 class="mt-1 text-2xl font-bold text-white">Security habits</h2>
+            </div>
+            <div class="rounded-full bg-slate-950/70 px-3 py-1 text-sm font-medium text-slate-300">
+              <span id="checkProgressText">0%</span>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.18em] text-slate-400">
+              <span>Progress</span>
+              <span id="checkCount">0 / 6</span>
+            </div>
+            <div class="h-3 overflow-hidden rounded-full bg-slate-800">
+              <div id="progressBar" class="h-full w-0 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-amber-400 transition-all duration-300"></div>
+            </div>
+          </div>
+
+          <div id="checklist" class="space-y-3"></div>
+
+          <div class="mt-6 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
+            <p class="font-semibold uppercase tracking-[0.12em] text-amber-200">Safety reminder</p>
+            <p class="mt-2 leading-6">
+              For educational purposes only. These examples are fictional and not connected to any real company or service.
+            </p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script>
+      const scenarios = [
+        {
+          type: "Email",
+          label: "Urgent security alert",
+          sender: "security@update-your-account-now.fake.com",
+          subject: "URGENT: Verify your account before Friday",
+          source: "From: BankSecure Support",
+          initial: "B",
+          answer: "phishing",
+          message: [
+            "We noticed unusual activity on your account and need you to verify your identity immediately.",
+            "A password reset is required to protect your account from potential fraud.",
+            "Click the link below to review your recent logins and confirm your details.",
+            "This request is time-sensitive and must be completed within 2 hours."
+          ],
+          redFlags: [
+            "Urgent pressure tactics",
+            "Suspicious sender domain",
+            "Generic threat without specific account details",
+            "Untrusted link disguised as a security action"
+          ],
+          feedback: {
+            phishing:
+              "Correct. This message is a phishing attempt. It uses urgency, a fake security claim, and a suspicious address to push you to click a malicious link.",
+            safe:
+              "Not quite. Real banks rarely demand immediate action through an unverified link, and this sender domain is not a trusted financial address."
+          }
+        },
+        {
+          type: "SMS",
+          label: "Package tracking update",
+          sender: "+1 (415) 555-0198",
+          subject: "Package delivery issue",
+          source: "From: ParcelFlash",
+          initial: "P",
+          answer: "phishing",
+          message: [
+            "Your package is delayed at the courier depot. To reschedule delivery, tap this link before 9:00 PM.",
+            "A small customs fee is due to continue shipping.",
+            "Track your parcel here: drive-download.fleetroute-fix.fake.net",
+            "Reply STOP to unsubscribe."
+          ],
+          redFlags: [
+            "Unusual payment request",
+            "Short deadline with pressure",
+            "Suspicious tracking link",
+            "Unexpected SMS asking for a payment"
+          ],
+          feedback: {
+            phishing:
+              "Correct. This is a phishing SMS. It pressures the victim to act fast and asks them to click a suspicious link to pay a fake fee.",
+            safe:
+              "Not quite. Legitimate delivery alerts usually come from official services, and a random payment request tied to a shortened or unfamiliar link is a red flag."
+          }
+        },
+        {
+          type: "Email",
+          label: "Password reset request",
+          sender: "help@verify-reset.fake.com",
+          subject: "Password reset required",
+          source: "From: Account Recovery Center",
+          initial: "A",
+          answer: "phishing",
+          message: [
+            "We detected a sign-in attempt from a new device. Use the secure reset form to review your session.",
+            "If you did not request this action, ignore the message. Otherwise, continue now.",
+            "Reset your password: secure-password-portal.fake.com/confirm",
+            "This message was sent to all active customers."
+          ],
+          redFlags: [
+            "Fake account recovery domain",
+            "Generic greeting and broad audience",
+            "Link uses a suspicious domain",
+            "No direct mention of a known service or account"
+          ],
+          feedback: {
+            phishing:
+              "Correct. A legitimate password reset should come from the real company’s domain and should not rely on a generic, alarming redirect.",
+            safe:
+              "Not quite. A real recovery notice should clearly reference your account, use the official domain, and avoid vague, mass-message wording."
+          }
+        },
+        {
+          type: "Email",
+          label: "Legitimate promotional message",
+          sender: "newsletter@brightpath.fake.net",
+          subject: "Your weekly safety tips and deals",
+          source: "From: BrightPath Community",
+          initial: "B",
+          answer: "safe",
+          message: [
+            "Hi there, thanks for subscribing to BrightPath updates.",
+            "This week’s digest includes helpful digital safety tips, product highlights, and a few curated offers.",
+            "You can manage your preferences any time from the email footer.",
+            "No action is required unless you want to review the latest updates."
+          ],
+          redFlags: [
+            "No urgency or fear-based language",
+            "Clear sender identity and footer controls",
+            "No suspicious link or payment request",
+            "Professional, informational tone"
+          ],
+          feedback: {
+            safe:
+              "Correct. This message is safe. It contains clear branding, an informational tone, and no pressure tactics or suspicious links.",
+            phishing:
+              "Not quite. This is a routine promotional email, not a scam. There are no urgent demands and the sender is identifiable and consistent."
+          }
+        }
+      ];
+
+      const checklist = [
+        {
+          text: "Enable 2-factor authentication (2FA) on important accounts",
+          checked: false
+        },
+        {
+          text: "Check whether your email or passwords were exposed on HaveIBeenPwned",
+          checked: false
+        },
+        {
+          text: "Audit app permissions on your phone and browser",
+          checked: false
+        },
+        {
+          text: "Use a trusted password manager for unique credentials",
+          checked: false
+        },
+        {
+          text: "Verify sender details before clicking links or opening attachments",
+          checked: false
+        },
+        {
+          text: "Keep devices, apps, and browsers updated",
+          checked: false
+        }
+      ];
+
+      let currentScenarioIndex = 0;
+      let resolvedDecision = false;
+
+      const scenarioCounter = document.getElementById("scenarioCounter");
+      const scenarioType = document.getElementById("scenarioType");
+      const scenarioLabel = document.getElementById("scenarioLabel");
+      const scenarioSource = document.getElementById("scenarioSource");
+      const scenarioSubject = document.getElementById("scenarioSubject");
+      const scenarioSender = document.getElementById("scenarioSender");
+      const senderInitial = document.getElementById("senderInitial");
+      const scenarioMessage = document.getElementById("scenarioMessage");
+      const redFlagBadges = document.getElementById("redFlagBadges");
+      const feedback = document.getElementById("feedback");
+      const feedbackIcon = document.getElementById("feedbackIcon");
+      const feedbackTitle = document.getElementById("feedbackTitle");
+      const feedbackText = document.getElementById("feedbackText");
+      const feedbackList = document.getElementById("feedbackList");
+      const phishingBtn = document.getElementById("phishingBtn");
+      const safeBtn = document.getElementById("safeBtn");
+
+      const checklistContainer = document.getElementById("checklist");
+      const progressBar = document.getElementById("progressBar");
+      const progressText = document.getElementById("checkProgressText");
+      const checkCount = document.getElementById("checkCount");
+
+      function renderChecklist() {
+        checklistContainer.innerHTML = "";
+        checklist.forEach((item, index) => {
+          const row = document.createElement("label");
+          row.className =
+            "check-item flex cursor-pointer items-start gap-3 rounded-2xl border px-3 py-3 " +
+            (item.checked
+              ? "border-emerald-500/40 bg-emerald-500/10"
+              : "border-slate-700 bg-slate-900/70");
+
+          row.innerHTML = `
+            <input type="checkbox" class="mt-1 h-5 w-5 accent-emerald-500" ${item.checked ? "checked" : ""} />
+            <span class="text-sm leading-6 ${item.checked ? "text-emerald-100 line-through decoration-emerald-400" : "text-slate-200"}">${item.text}</span>
+          `;
+
+          row.querySelector("input").addEventListener("change", (event) => {
+            checklist[index].checked = event.target.checked;
+            renderChecklist();
+          });
+
+          checklistContainer.appendChild(row);
+        });
+
+        const checkedItems = checklist.filter(item => item.checked).length;
+        const percent = Math.round((checkedItems / checklist.length) * 100);
+        progressBar.style.width = `${percent}%`;
+        progressText.textContent = `${percent}%`;
+        checkCount.textContent = `${checkedItems} / ${checklist.length}`;
+      }
+
+      function renderScenario(index) {
+        const scenario = scenarios[index];
+        scenarioCounter.textContent = index + 1;
+        scenarioType.textContent = scenario.type;
+        scenarioType.className = scenario.type === "Email"
+          ? "flag-pill border border-amber-500/30 bg-amber-500/15 text-amber-200"
+          : "flag-pill border border-cyan-500/30 bg-cyan-500/15 text-cyan-200";
+
+        scenarioLabel.textContent = scenario.answer === "phishing" ? "Suspicious" : "Safe";
+        scenarioLabel.className = scenario.answer === "phishing"
+          ? "text-xs uppercase tracking-[0.18em] text-rose-300"
+          : "text-xs uppercase tracking-[0.18em] text-emerald-300";
+
+        scenarioSource.textContent = scenario.source;
+        scenarioSubject.textContent = scenario.subject;
+        scenarioSender.textContent = scenario.sender;
+        senderInitial.textContent = scenario.initial;
+
+        scenarioMessage.innerHTML = scenario.message
+          .map((line) => `<p>${line}</p>`)
+          .join("");
+
+        redFlagBadges.innerHTML = scenario.redFlags
+          .map(flag => {
+            const chipColor = scenario.answer === "phishing"
+              ? "bg-rose-500/15 text-rose-200 border border-rose-400/25"
+              : "bg-emerald-500/15 text-emerald-200 border border-emerald-400/25";
+            return `<span class="${chipColor} px-2 py-1 rounded-full text-[10px] uppercase tracking-[0.15em] font-medium">${flag}</span>`;
+          })
+          .join("");
+
+        feedback.classList.add("hidden");
+        feedback.classList.remove("border-rose-500/40", "bg-rose-500/10", "border-emerald-500/40", "bg-emerald-500/10");
+        feedbackIcon.className = "inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-bold";
+        feedbackTitle.textContent = "Feedback";
+        feedbackText.textContent = "";
+        feedbackList.innerHTML = "";
+        resolvedDecision = false;
+      }
+
+      function showFeedback(isCorrect, selectedAnswer) {
+        resolvedDecision = true;
+
+        const scenario = scenarios[currentScenarioIndex];
+        const correctAnswer = scenario.answer === "phishing";
+
+        const correctLabel = isCorrect ? "Correct" : "Not quite";
+
+        if (isCorrect) {
+          feedback.classList.remove("hidden");
+          feedback.classList.add("border-emerald-500/40", "bg-emerald-500/10");
+          feedbackIcon.className = "inline-flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-200 text-sm font-bold";
+          feedbackIcon.textContent = "✓";
+          feedbackTitle.textContent = `${correctLabel} — ${scenario.answer === "phishing" ? "Phishing detected" : "Safe message"}`;
+          feedbackText.textContent = scenario.feedback[selectedAnswer];
+          feedbackList.innerHTML = scenario.redFlags
+            .map(flag => `<li>• ${flag}</li>`)
+            .join("");
+        } else {
+          feedback.classList.remove("hidden");
+          feedback.classList.add("border-rose-500/40", "bg-rose-500/10");
+          feedbackIcon.className = "inline-flex h-7 w-7 items-center justify-center rounded-full bg-rose-500/20 text-rose-200 text-sm font-bold";
+          feedbackIcon.textContent = "!";
+          feedbackTitle.textContent = `${correctLabel} — ${scenario.answer === "phishing" ? "Phishing detected" : "Safe message"}`;
+          feedbackText.textContent = scenario.feedback[scenario.answer];
+          feedbackList.innerHTML = scenario.redFlags
+            .map(flag => `<li>• ${flag}</li>`)
+            .join("");
+        }
+      }
+
+      function advanceScenario() {
+        if (currentScenarioIndex < scenarios.length - 1) {
+          currentScenarioIndex += 1;
+          renderScenario(currentScenarioIndex);
+        } else {
+          const finalPanel = document.getElementById("scenarioCard");
+          finalPanel.innerHTML = `
+            <div class="flex min-h-[320px] flex-col items-center justify-center text-center">
+              <div class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-3xl text-emerald-300">✓</div>
+              <h3 class="mb-2 text-2xl font-bold text-white">Scenario review complete</h3>
+              <p class="max-w-md text-sm leading-7 text-slate-300">
+                Good work. You’ve reviewed four fictional cases and practiced the habits that help protect you from scams.
+              </p>
+              <button
+                id="restartBtn"
+                class="mt-6 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-5 py-3 font-semibold text-emerald-200 transition hover:bg-emerald-500/20"
+              >
+                Restart simulator
+              </button>
+            </div>
+          `;
+
+          document.getElementById("restartBtn").addEventListener("click", () => {
+            currentScenarioIndex = 0;
+            renderScenario(currentScenarioIndex);
+            const container = document.getElementById("scenarioCard");
+            container.innerHTML = `
+              <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <span id="scenarioType" class="flag-pill bg-amber-500/15 text-amber-200 border border-amber-500/30">Email</span>
+                  <span id="scenarioLabel" class="text-xs uppercase tracking-[0.18em] text-slate-400">Suspicious</span>
+                </div>
+                <div class="text-xs uppercase tracking-[0.18em] text-slate-400" id="scenarioSource">From</div>
+              </div>
+
+              <div class="mb-3 rounded-xl border border-slate-700 bg-slate-900/80 p-3">
+                <p class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Subject</p>
+                <h3 id="scenarioSubject" class="mt-2 text-xl font-semibold text-slate-50">Subject line</h3>
+              </div>
+
+              <div class="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
+                <div class="mb-4 flex items-center gap-3">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500/15 text-lg text-emerald-300">
+                    <span id="senderInitial">S</span>
+                  </div>
+                  <div>
+                    <p id="scenarioSender" class="font-medium text-slate-100">sender</p>
+                    <p class="text-xs text-slate-400">Security notice</p>
+                  </div>
+                </div>
+
+                <div id="scenarioMessage" class="space-y-3 text-sm leading-7 text-slate-300">
+                  Message preview...
+                </div>
+
+                <div class="mt-5 flex flex-wrap gap-2" id="redFlagBadges"></div>
+              </div>
+            `;
+            renderScenario(0);
+          });
+        }
+      }
+
+      phishingBtn.addEventListener("click", () => {
+        if (resolvedDecision) return;
+        const scenario = scenarios[currentScenarioIndex];
+        const selected = "phishing";
+        const correct = selected === scenario.answer;
+        showFeedback(correct, selected);
+        setTimeout(() => advanceScenario(), 1400);
+      });
+
+      safeBtn.addEventListener("click", () => {
+        if (resolvedDecision) return;
+        const scenario = scenarios[currentScenarioIndex];
+        const selected = "safe";
+        const correct = selected === scenario.answer;
+        showFeedback(correct, selected);
+        setTimeout(() => advanceScenario(), 1400);
+      });
+
+      renderChecklist();
+      renderScenario(currentScenarioIndex);
+    </script>
+  </body>
+</html>
